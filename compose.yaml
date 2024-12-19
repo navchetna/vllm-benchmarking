@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  vllm-1:
+    image: vllm-cpu-env:latest
+    container_name: vllm-server-1
+    volumes:
+      - "/root/.cache/huggingface/hub:/root/.cache/huggingface/hub"
+    privileged: true
+    environment:
+      no_proxy: ${no_proxy}
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
+      VLLM_CPU_KVCACHE_SPACE: 40
+      VLLM_CPU_OMP_THREADS_BIND: "0-71"
+      HF_TOKEN : ${HUGGINGFACEHUB_API_TOKEN}
+    command: vllm serve ${MODEL} -tp=1 --distributed-executor-backend mp
+  vllm-2:
+    image: vllm-cpu-env:latest
+    container_name: vllm-server-2
+    volumes:
+      - "/root/.cache/huggingface/hub:/root/.cache/huggingface/hub"
+    privileged: true
+    environment:
+      no_proxy: ${no_proxy}
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
+      VLLM_CPU_KVCACHE_SPACE: 40
+      VLLM_CPU_OMP_THREADS_BIND: "72-143"
+      HF_TOKEN : ${HUGGINGFACEHUB_API_TOKEN}
+    command: vllm serve ${MODEL} -tp=1 --distributed-executor-backend mp
+  vllm-3:
+    image: vllm-cpu-env:latest
+    container_name: vllm-server-3
+    volumes:
+      - "/root/.cache/huggingface/hub:/root/.cache/huggingface/hub"
+    privileged: true
+    environment:
+      no_proxy: ${no_proxy}
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
+      VLLM_CPU_KVCACHE_SPACE: 40
+      VLLM_CPU_OMP_THREADS_BIND: "144-215"
+      HF_TOKEN : ${HUGGINGFACEHUB_API_TOKEN}
+    command: vllm serve ${MODEL} -tp=1 --distributed-executor-backend mp
+  vllm-4:
+    image: vllm-cpu-env:latest
+    container_name: vllm-server-4
+    volumes:
+      - "/root/.cache/huggingface/hub:/root/.cache/huggingface/hub"
+    privileged: true
+    environment:
+      no_proxy: ${no_proxy}
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
+      VLLM_CPU_KVCACHE_SPACE: 40
+      VLLM_CPU_OMP_THREADS_BIND: "216-287"
+      HF_TOKEN : ${HUGGINGFACEHUB_API_TOKEN}
+    command: vllm serve ${MODEL} -tp=1 --distributed-executor-backend mp
+  haproxy-vllm:
+    image: haproxy:3.0
+    container_name: haproxy-vllm
+    ports:
+      - "4000:80"
+    depends_on:
+      - vllm-1
+      - vllm-2
+      - vllm-3
+      - vllm-4
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
