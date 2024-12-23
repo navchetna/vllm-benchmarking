@@ -2,7 +2,7 @@ version: '3'
 
 services:
   vllm-1:
-    image: vllm-cpu-env:latest
+    image: thebeginner86intel/vllm-cpu-env:latest
     container_name: vllm-server-1
     volumes:
       - "/root/.cache/huggingface/hub:/root/.cache/huggingface/hub"
@@ -16,7 +16,7 @@ services:
       HF_TOKEN : ${HUGGINGFACEHUB_API_TOKEN}
     command: vllm serve ${MODEL} -tp=1 --distributed-executor-backend mp
   vllm-2:
-    image: vllm-cpu-env:latest
+    image: thebeginner86intel/vllm-cpu-env:latest
     container_name: vllm-server-2
     volumes:
       - "/root/.cache/huggingface/hub:/root/.cache/huggingface/hub"
@@ -30,7 +30,7 @@ services:
       HF_TOKEN : ${HUGGINGFACEHUB_API_TOKEN}
     command: vllm serve ${MODEL} -tp=1 --distributed-executor-backend mp
   vllm-3:
-    image: vllm-cpu-env:latest
+    image: thebeginner86intel/vllm-cpu-env:latest
     container_name: vllm-server-3
     volumes:
       - "/root/.cache/huggingface/hub:/root/.cache/huggingface/hub"
@@ -44,7 +44,7 @@ services:
       HF_TOKEN : ${HUGGINGFACEHUB_API_TOKEN}
     command: vllm serve ${MODEL} -tp=1 --distributed-executor-backend mp
   vllm-4:
-    image: vllm-cpu-env:latest
+    image: thebeginner86intel/vllm-cpu-env:latest
     container_name: vllm-server-4
     volumes:
       - "/root/.cache/huggingface/hub:/root/.cache/huggingface/hub"
